@@ -62,6 +62,7 @@ const Background = styled.div`
 
 const ImageTitle = styled.div`
   height: 30vh;
+  margin-top: 60px;
   min-height: 170px;
   width: 35vh;
   min-width: 200px;
@@ -131,5 +132,6 @@ const Description = styled.div`
   line-height: 1.4;
   font-size: 20px;
   margin-top: 16px;
+  max-width: 760px;
   color: rgb(249, 249, 249);
 `;

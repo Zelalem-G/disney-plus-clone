@@ -6,8 +6,10 @@ import { useNavigate } from "react-router-dom";
 import {
   selectUserName,
   selectUserPhoto,
+  setSignOutState,
   setUserLoginDetails,
 } from "../features/user/userSlice";
+import { useEffect } from "react";
 
 function Header(props) {
   const dispatch = useDispatch();
@@ -15,16 +17,36 @@ function Header(props) {
   const userName = useSelector(selectUserName);
   const userPhoto = useSelector(selectUserPhoto);
 
+  useEffect(() => {
+    auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        setUser(user);
+        navigate("/home");
+      }
+    });
+  }, [userName]);
+
   const handleAuth = () => {
-    auth
-      .signInWithPopup(provider)
-      .then((result) => {
-        setUser(result.user);
-        //   navigate("/"); // redirect to home or dashboard
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    if (!userName) {
+      auth
+        .signInWithPopup(provider)
+        .then((result) => {
+          setUser(result.user);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else if (userName) {
+      auth
+        .signOut()
+        .then(() => {
+          dispatch(setSignOutState());
+          navigate("/");
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
   };
 
   const setUser = (user) => {
@@ -39,7 +61,9 @@ function Header(props) {
 
   return (
     <Nav>
-      <Logo src="/images/logo.svg" />
+      <Logo>
+        <img src="/images/logo.svg" />
+      </Logo>
       {!userName ? (
         <Login onClick={handleAuth}>Login</Login>
       ) : (
@@ -47,11 +71,11 @@ function Header(props) {
           <NavMenu>
             <a>
               <img src="/images/home-icon.svg" alt="home icon" />
-              <span>Home</span>
+              <span>HOME</span>
             </a>
             <a>
               <img src="/images/search-icon.svg" alt="search icon" />
-              <span>Search</span>
+              <span>SEARCH</span>
             </a>
             <a>
               <img src="/images/watchlist-icon.svg" alt="watchlist icon" />
@@ -70,7 +94,12 @@ function Header(props) {
               <span>SERIES</span>
             </a>
           </NavMenu>
-          <UserImg src={userPhoto} alt="profile picture" />
+          <Signout>
+            <UserImg src={userPhoto} alt="profile picture" />
+            <DropDown>
+              <span onClick={handleAuth}>Sign out</span>
+            </DropDown>
+          </Signout>
         </>
       )}
     </Nav>
@@ -80,25 +109,50 @@ function Header(props) {
 export default Header;
 
 const Nav = styled.nav`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
   height: 70px;
   background: #090b13;
+  letter-spacing: 16px;
   display: flex;
   align-items: center;
   padding: 0 36px;
   overflow-x: hidden;
   justify-content: space-between;
+  z-index: 3;
 `;
 
-const Logo = styled.img`
+const Logo = styled.a`
+  padding: 0;
   width: 80px;
+  margin-top: 4px;
+  max-height: 70px;
+  font-size: 0;
+  display: inline-block;
+
+  img {
+    display: block;
+    width: 100%;
+  }
 `;
 
 const NavMenu = styled.div`
   display: flex;
   align-items: center;
-  justify-content: space-around;
+  height: 100%;
+  flex-flow: row nowrap;
   flex: 1;
+  justify-content: space-around;
+  padding: opx;
   margin-left: 25px;
+  margin-right: 55px;
+  position: relative;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
 
   a {
     display: flex;
@@ -111,6 +165,8 @@ const NavMenu = styled.div`
     }
 
     span {
+      padding-top: 2px;
+      padding-left: 1px;
       font-size: 13px;
       letter-spacing: 1.42px;
       position: relative;
@@ -139,13 +195,6 @@ const NavMenu = styled.div`
   }
 `;
 
-const UserImg = styled.img`
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  cursor: pointer;
-`;
-
 const Login = styled.a`
   background-color: rgba(0, 0, 0, 0.6);
   padding: 8px 16px;
@@ -159,5 +208,43 @@ const Login = styled.a`
     background-color: #f9f9f9;
     color: #000;
     border-color: transparent;
+  }
+`;
+
+const DropDown = styled.div`
+  position: absolute;
+  top: 0px;
+  right: 45px;
+  background: rgb(19, 19, 19);
+  border: 1px solid rgba(151, 151, 151, 0.34);
+  border-radius: 4px;
+  box-shadow: rgb(0 0 0 / 50%) 0px 0px 18px 0px;
+  padding: 10px;
+  font-size: 14px;
+  letter-spacing: 3px;
+  width: 100px;
+  opacity: 0;
+`;
+
+const UserImg = styled.img`
+  border-radius: 50%;
+  height: 100%;
+  width: 100%;
+`;
+
+const Signout = styled.div`
+  position: relative;
+  width: 48px;
+  height: 48px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    ${DropDown} {
+      opacity: 1;
+      transition-duration: 1s;
+    }
   }
 `;

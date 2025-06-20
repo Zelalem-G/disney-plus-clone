@@ -1,6 +1,18 @@
 import styled from "styled-components";
+import { auth, provider } from "../firebase";
 
-function Header() {
+function Header(props) {
+  const handleAuth = () => {
+    auth
+      .signInWithPopup(provider)
+      .then((result) => {
+        console.log(result);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   return (
     <Nav>
       <Logo src="/images/logo.svg" />
@@ -30,7 +42,8 @@ function Header() {
           <span>SERIES</span>
         </a>
       </NavMenu>
-      <UserImg src="/images/profile-pic.jpg" alt="profile picture" />
+      {/* <UserImg src="/images/profile-pic.jpg" alt="profile picture" /> */}
+      <Login onClick={handleAuth}>Login</Login>
     </Nav>
   );
 }
@@ -101,4 +114,20 @@ const UserImg = styled.img`
   height: 48px;
   border-radius: 50%;
   cursor: pointer;
+`;
+
+const Login = styled.a`
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 8px 16px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  border-radius: 4px;
+  border: 1px solid #f9f9f9;
+  transition: all 0.2s ease 0s;
+
+  &:hover {
+    background-color: #f9f9f9;
+    color: #000;
+    border-color: transparent;
+  }
 `;

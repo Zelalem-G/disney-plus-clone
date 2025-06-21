@@ -24,10 +24,11 @@ function Home() {
 export default Home;
 
 const Container = styled.main`
-  min-height: calc(100vh - 70px);
+  min-height: calc(100vh - 250px);
   padding: 0 calc(3.5vw + 5px);
   position: relative;
   overflow-x: hidden;
+  top: 70px;
 
   &:before {
     background: url("/images/home-background.png") center center / cover

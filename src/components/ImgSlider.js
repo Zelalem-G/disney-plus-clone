@@ -34,7 +34,7 @@ function ImgSlider() {
 export default ImgSlider;
 
 const Carousel = styled(Slider)`
-  margin-top: 70px;
+  margin-top: 20px;
 
   ul li button {
     &:before {
@@ -53,6 +53,15 @@ const Carousel = styled(Slider)`
 
   button {
     z-index: 1;
+  }
+
+  & > button {
+    opacity: 0;
+  }
+  &:hover {
+    & > button {
+      opacity: 1;
+    }
   }
 `;
 const Wrap = styled.div`

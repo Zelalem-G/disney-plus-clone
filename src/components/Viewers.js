@@ -83,7 +83,7 @@ const Wrap = styled.div`
     width: 100%;
     height: 100%;
     position: absolute;
-    top: 0px;
+    top: 0;
     opacity: 0;
     z-index: 0;
     transition: opacity 0.3s ease-in-out;

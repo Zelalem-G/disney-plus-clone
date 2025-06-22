@@ -1,31 +1,23 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { selectOriginal } from "../features/movie/movieSlice";
 
 function Originals() {
+  const movies = useSelector(selectOriginal);
+
   return (
     <Container>
       <h4>Originals</h4>
       <Content>
-        <Wrap>
-          <Link to="/detail">
-            <img src="https://ntvb.tmsimg.com/assets/p25450661_b_h8_ab.jpg?w=960&h=540" />
-          </Link>
-        </Wrap>
-        <Wrap>
-          <Link to="/detail">
-            <img src="https://image.tmdb.org/t/p/w500/ulzhLuWrPK07P1YkdWQLZnQh1JL.jpg" />
-          </Link>
-        </Wrap>
-        <Wrap>
-          <Link to="/detail">
-            <img src="https://www.google.com/imgres?q=disney%20plus%20%2B%20movies%20and%20shows%20posters&imgurl=https%3A%2F%2Flumiere-a.akamaihd.net%2Fv1%2Fimages%2Fluca_thumbnail_image_2d04cabd.png%3Fregion%3D256%2C0%2C472%2C473&imgrefurl=https%3A%2F%2Fpress.disneyplus.com%2Fnews%2Fdisney-plus-luca-reveals-new-clip-featurette-posters&docid=PyRPaYaW57oQYM&tbnid=XzqdkAUKfbC7EM&vet=12ahUKEwiJ78i7mfaNAxUBVKQEHSemNEMQM3oECB0QAA..i&w=472&h=472&hcb=2&ved=2ahUKEwiJ78i7mfaNAxUBVKQEHSemNEMQM3oECB0QAAhttps://m.media-amazon.com/images/I/71CdJ4wsN8S.jpg" />
-          </Link>
-        </Wrap>
-        <Wrap>
-          <Link to="/detail">
-            <img src="https://hips.hearstapps.com/hmg-prod/images/cinderella-64764751c5831.jpeg?crop=1xw:1xh;center,top&resize=980:*" />
-          </Link>
-        </Wrap>
+        {movies &&
+          movies.map((movie, i) => (
+            <Wrap key={i}>
+              <Link to={"/detail/" + movie.id}>
+                <img src={movie.cardImg} alt={movie.title} />
+              </Link>
+            </Wrap>
+          ))}
       </Content>
     </Container>
   );

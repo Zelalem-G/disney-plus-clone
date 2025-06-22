@@ -15,13 +15,14 @@ import { selectUserName } from "../features/user/userSlice";
 function Home() {
   const dispatch = useDispatch();
   const userName = useSelector(selectUserName);
-  let recommends = [];
-  let newDisneys = [];
-  let originals = [];
-  let trendings = [];
 
   useEffect(() => {
     db.collection("movies").onSnapshot((snapshot) => {
+      let recommends = [];
+      let newDisneys = [];
+      let originals = [];
+      let trendings = [];
+
       snapshot.docs.map((doc) => {
         switch (doc.data().type) {
           case "recommend":

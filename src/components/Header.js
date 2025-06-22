@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 import { auth, provider } from "../firebase";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -69,10 +70,10 @@ function Header(props) {
       ) : (
         <>
           <NavMenu>
-            <a>
+            <Link to="/home">
               <img src="/images/home-icon.svg" alt="home icon" />
               <span>HOME</span>
-            </a>
+            </Link>
             <a>
               <img src="/images/search-icon.svg" alt="search icon" />
               <span>SEARCH</span>
